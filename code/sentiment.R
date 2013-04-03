@@ -1,37 +1,38 @@
 ##
-##
+## Required packages
 ##
 require(plyr)
 require(stringr)
-require(sentiment)
-require(doMC)
-registerDoMC(detectCores())
 
-# import positive and negative words
+##
+## If running on Linux machine - use multicore
+##
+switch(Sys.info()[['sysname']],
+       Linux  = {require(doMC)
+                 registerDoMC(detectCores())})
+##
+## Imports positive and negative words
+## Source: http://www.cs.uic.edu/~liub/FBS/sentiment-analysis.html
+##
 pos.words <- readLines("../data/positive_words.txt")
 neg.words <- readLines("../data/negative_words.txt")
 
 ##
-##
+## Simple sentiment scoring, inspired by Jeffrey Breen post
+## Source: http://jeffreybreen.wordpress.com/2011/07/04/twitter-text-mining-r-slides/
 ##
 score.sentiment <- function(sentences, .progress='none')
 {
   # Parameters
   # sentences: vector of text to score
-  # pos.words: vector of words of postive sentiment
-  # neg.words: vector of words of negative sentiment
   # .progress: passed to laply() to control of progress bar
 
   # create simple array of scores with laply
   scores <- laply(sentences, 
                  function(sentence, pos.words, neg.words)
                  {
-                   # remove punctuation
-#                    sentence <- gsub("[[:punct:]]", "", sentence)
-                   # remove control characters
-#                    sentence <- gsub("[[:cntrl:]]", "", sentence)
-                   # remove digits?
-#                    sentence <- gsub('\\d+', '', sentence)
+                   # text is already cleared and lowercased
+                   # so, no need to preprocess
                    
                    # split sentence into words with str_split (stringr package)
                    word.list <- str_split(sentence, "\\s+")
@@ -51,5 +52,5 @@ score.sentiment <- function(sentences, .progress='none')
                    return(score)
                  }, pos.words, neg.words, .parallel=TRUE, .progress=.progress)
   
-  return(scores)
+  return(as.numeric(scores))
 }
