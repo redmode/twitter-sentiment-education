@@ -14,8 +14,20 @@ source("geonames.R")
 Sys.setlocale(locale="C")
 
 args  <- commandArgs(TRUE)
-query <- ifelse(!is.na(args[1]), args[1], "education,university,professor,college")
-lang  <- ifelse(!is.na(args[2]), args[2], "en")
+if(is.na(args[1]))
+  stop("You should provide your Twitter Streaming API username:password as first argument!")
+usrpwd <- args[1]
+query  <- ifelse(!is.na(args[2]), args[2], "education,university,professor,college")
+lang   <- ifelse(!is.na(args[3]), args[3], "en")
+
+##
+## Welcome message
+##
+cat("\n\nQuering Twitter Stream:",
+    "\n**********************************************************\n",
+    "Query:   ", query, "\n",
+    "Language:", lang,
+    "\n**********************************************************\n\n")
 
 ##
 ## Processing function for raw tweets
@@ -104,6 +116,6 @@ process <- function(x){
 ## Request to Twitter Streaming API
 ##
 getURL("https://stream.twitter.com/1/statuses/filter.json", 
-       userpwd="rredmode:chalera-twitter",
+       userpwd=usrpwd,
        write=process,
        postfields=paste0("track=",query))
