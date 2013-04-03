@@ -1,0 +1,15 @@
+{
+    "contents" : "##\n##\n##\nrequire(plyr)\nrequire(stringr)\nrequire(sentiment)\nrequire(doMC)\nregisterDoMC(detectCores())\n\n# import positive and negative words\npos.words <- readLines(\"../data/positive_words.txt\")\nneg.words <- readLines(\"../data/negative_words.txt\")\n\n##\n##\n##\nscore.sentiment <- function(sentences, .progress='none')\n{\n  # Parameters\n  # sentences: vector of text to score\n  # pos.words: vector of words of postive sentiment\n  # neg.words: vector of words of negative sentiment\n  # .progress: passed to laply() to control of progress bar\n\n  # create simple array of scores with laply\n  scores <- laply(sentences, \n                 function(sentence, pos.words, neg.words)\n                 {\n                   # remove punctuation\n#                    sentence <- gsub(\"[[:punct:]]\", \"\", sentence)\n                   # remove control characters\n#                    sentence <- gsub(\"[[:cntrl:]]\", \"\", sentence)\n                   # remove digits?\n#                    sentence <- gsub('\\\\d+', '', sentence)\n                   \n                   # split sentence into words with str_split (stringr package)\n                   word.list <- str_split(sentence, \"\\\\s+\")\n                   words <- unlist(word.list)\n                   \n                   # compare words to the dictionaries of positive & negative terms\n                   pos.matches <- match(words, pos.words)\n                   neg.matches <- match(words, neg.words)\n                   \n                   # get the position of the matched term or NA\n                   # we just want a TRUE/FALSE\n                   pos.matches <- !is.na(pos.matches)\n                   neg.matches <- !is.na(neg.matches)\n                   \n                   # final score\n                   score <- sum(pos.matches) - sum(neg.matches)\n                   return(score)\n                 }, pos.words, neg.words, .parallel=TRUE, .progress=.progress)\n  \n  return(scores)\n}\n",
+    "created" : 1364888877549.000,
+    "dirty" : false,
+    "encoding" : "UTF-8",
+    "folds" : "",
+    "hash" : "2652646906",
+    "id" : "C13D96EE",
+    "lastKnownWriteTime" : 1364973845,
+    "path" : "~/docs/Dropbox/Docs/study/Publications/2013/2013-03-IOT/code/sentiment.R",
+    "properties" : {
+    },
+    "source_on_save" : true,
+    "type" : "r_source"
+}

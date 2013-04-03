@@ -1,0 +1,15 @@
+{
+    "contents" : "##\n## Clearing the workspace\n##\nrm(list=ls(all=TRUE))\ngc(reset=TRUE)\nset.seed(12345)\n\n##\n## Required packages\n##\nrequire(ggplot2)\nrequire(rworldmap)\nsource(\"sentiment.R\")\n\n\n##\n## Reading stream\n##\nstream <- read.table(file=\"../data/tweets.txt\", header=F, sep=\"\\t\",\n                     encoding=\"UTF-8\",\n                     fill=T, allowEscapes=T,\n                     col.names=c(\"id\",\"date\",\"text\",\"lang\",\"lat\",\"lng\",\"country\",\"code\"))\nstream <- na.omit(stream)\nstream$score <- NA\n\nK <- 5000\nN <- (nrow(stream) %/% K) + 1\nfor(i in 1:N){\n  start  <- (i-1)*K + 1 \n  finish <- i*K\n  if(i==N) finish <- nrow(stream)\n  \n  stream$score[start:finish] <- score.sentiment(stream$text[start:finish])\n}\n\n##\n## Scoring sentiments\n##\n# stream$score <- score.sentiment(stream$text, .progress='text')[,2]\nstream$score[stream$score>  2] <- +2\nstream$score[stream$score< -2] <- -2\nstream$score <- as.factor(stream$score)\n\n##\n## Plotting to the map\n##\nworld <- fortify(getMap(resolution=\"low\"))\n\np <- ggplot()\np <- p + geom_polygon(data=world, aes(x=long, y=lat, group=group),\n                      colour=\"#888888\", fill=\"#ddddee\", alpha=0.6)\np <- p + geom_point(data=stream, aes(x=lng,y=lat,colour=score), alpha=0.8)\np <- p + scale_colour_manual(name=\"Оценка\",\n                             values=c(\"red\",\"orange\",\"#aaaaaa\",\"#99dd99\",\"#00dd00\"))\np + xlab(\"Долгота, градусы\") + ylab(\"Широта, градусы\")\n\n\n##\n## Simple histogramms\n##\n\ntopnames <- names(sort(table(stream$code), decreasing=T)[1:3])\nstream$top <- as.character(stream$code)\nstream$top[!(stream$code %in% topnames)] <- \"Other\"\n\nh <- ggplot()\nh <- h + geom_histogram(data=stream, aes(x=score)) + facet_grid(.~top)\nh\n\n##\n## \n##\n\n",
+    "created" : 1364888862955.000,
+    "dirty" : false,
+    "encoding" : "UTF-8",
+    "folds" : "",
+    "hash" : "1176781415",
+    "id" : "E29DBE64",
+    "lastKnownWriteTime" : 1364934895,
+    "path" : "~/docs/Dropbox/Docs/study/Publications/2013/2013-03-IOT/code/main.R",
+    "properties" : {
+    },
+    "source_on_save" : false,
+    "type" : "r_source"
+}
