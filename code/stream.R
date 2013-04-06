@@ -1,5 +1,13 @@
 #!/usr/bin/Rscript
 
+#########################################################################
+##
+## stream.R
+## Rscript for connection to Twitter Streaming API
+## Alexander Gedranovich, 2013
+##
+#########################################################################
+
 ##
 ## Loading libraries & sources
 ##

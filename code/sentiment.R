@@ -1,8 +1,20 @@
+#########################################################################
+##
+## sentiment.R
+## Functions for sentiment analysis
+## Alexander Gedranovich, 2013
+##
+#########################################################################
+
 ##
 ## Required packages
 ##
 require(plyr)
 require(stringr)
+
+require(tm)
+require(wordcloud)
+require(RColorBrewer)
 
 ##
 ## If running on Linux machine - use multicore
@@ -53,4 +65,27 @@ score.sentiment <- function(sentences, .progress='none')
                  }, pos.words, neg.words, .parallel=TRUE, .progress=.progress)
   
   return(as.numeric(scores))
+}
+
+plot.wordcloud <- function(text, file){
+  corpus <- Corpus(VectorSource(text))
+  tdm <- TermDocumentMatrix(corpus, control=list(stopwords=c("university",
+                                                             "college",
+                                                             "professor",
+                                                             "education",
+                                                             "amp",
+                                                             "monsters",
+                                                             "pixars",
+                                                             "disney",
+                                                             stopwords("english"))))
+  fw <- findFreqTerms(tdm, lowfreq=50)
+  ft <- rowSums(matrix(tdm[fw,], nrow=length(fw)))
+  dm <- data.frame(word=fw, freq=ft)
+  dm <- dm[with(dm, order(-freq)),]
+  
+  png(file, width=15, height=15, units="cm", res=600)
+  wordcloud(dm$word, dm$freq, random.order=FALSE, colors=brewer.pal(8, "Dark2"))
+  dev.off()
+  
+  return("ok")
 }

@@ -1,3 +1,11 @@
+#########################################################################
+##
+## geonames.R
+## Functions for connections to GeoNames API
+## Alexander Gedranovich, 2013
+##
+#########################################################################
+
 ##
 ## Function uses geonames.org API to retrieve 
 ## geographical coordinates by location name

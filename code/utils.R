@@ -1,3 +1,11 @@
+#########################################################################
+##
+## utils.R
+## Some supplementary functions
+## Alexander Gedranovich, 2013
+##
+#########################################################################
+
 ##
 ## Error handling function when trying 'tolower'
 ## Source: http://jeffreybreen.wordpress.com/2011/07/04/twitter-text-mining-r-slides/
@@ -13,6 +21,14 @@ tryTolower <- function(x)
     y = tolower(x)
   # result
   as.character(y)
+}
+
+##
+## Most frequent value in array
+##
+mode <- function(x) {
+  ux <- unique(x)
+  ux[which.max(tabulate(match(x, ux)))]
 }
 
 ##
