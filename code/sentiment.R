@@ -83,7 +83,7 @@ plot.wordcloud <- function(text, file){
   dm <- data.frame(word=fw, freq=ft)
   dm <- dm[with(dm, order(-freq)),]
   
-  png(file, width=15, height=15, units="cm", res=600)
+  pdf(file)
   wordcloud(dm$word, dm$freq, random.order=FALSE, colors=brewer.pal(8, "Dark2"))
   dev.off()
   

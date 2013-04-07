@@ -78,8 +78,8 @@ load("../data/stream.rda")
 ## Popular words clouds
 ##
 
-plot.wordcloud(stream$text[stream$score>0], "../writing/figure/word.cloud.pos.png")
-plot.wordcloud(stream$text[stream$score<0], "../writing/figure/word.cloud.neg.png")
+plot.wordcloud(stream$text[stream$score>0], "../writing/figure/word.cloud.pos.pdf")
+plot.wordcloud(stream$text[stream$score<0], "../writing/figure/word.cloud.neg.pdf")
 
 
 ##
@@ -128,7 +128,7 @@ estream$clat <- as.numeric(cut(estream$lat, breaks=N))
 dt <- data.table(estream)
 setkey(dt, clat, clng)
 
-m <- dt[,list(lat=mean(lat),lng=mean(lng),score=mode(score),size=log(length(score)+1,2)),by="clat,clng"]
+m <- dt[,list(lat=mean(lat),lng=mean(lng),score=mode(score),size=log(length(score)+1)),by="clat,clng"]
 m <- data.frame(m)[,3:6]
 m <- rbind(m, data.frame(lng=0,lat=0,score=0,size=1))
 
@@ -159,22 +159,35 @@ rm(list=c("estream","m","world","N","dt","p","p.usa","p.europe"))
 ## Simple histogramms
 ##
 
-topnames <- names(sort(table(stream$code), decreasing=T)[1:3])
-topnames <- c("BY","RU","UA","US")
+# topnames <- names(sort(table(stream$code), decreasing=T)[1:3])
+# topnames <- c("BY","LT","UA","PL")
+topnames <- c("RU","US","GB")
+# topnames <- c("BY","LT","UA","PL","RU","US","GB")
 
 stream$top <- as.character(stream$code)
 stream$top[!(stream$code %in% topnames)] <- "Other"
 
+# stream$top[stream$top=="BY"] <- "Беларусь"
+# stream$top[stream$top=="LT"] <- "Литва"
+# stream$top[stream$top=="UA"] <- "Украина"
+# stream$top[stream$top=="PL"] <- "Польша"
+
+stream$top[stream$top=="RU"] <- "Россия"
+stream$top[stream$top=="US"] <- "США"
+stream$top[stream$top=="GB"] <- "Великобритания"
+
+
 h <- ggplot() + theme_bw()
 h <- h + geom_histogram(data=stream[stream$top!="Other",], aes(x=score, y=..density..), binwidth=0.5)
-h <- h + facet_grid(.~top)
 
-stream$top <- "World"
+stream$top <- "Всего"
 h <- h + geom_histogram(data=stream, aes(x=score, y=..density..), binwidth=0.5)
 h <- h + scale_x_continuous(labels=c(-2:2), breaks=c(-2:2)+0.25)
 h <- h + xlab("Оценки") + ylab("Плотность")
+
+h <- h + facet_grid(.~top)
 h
-ggsave("../writing/figure/density.pdf", plot=h, dpi=300, width=25, height=10, units="cm")
+ggsave("../writing/figure/density.high.pdf", plot=h, cairo_pdf, dpi=300, width=25, height=10, units="cm")
 
 ##
 ## 

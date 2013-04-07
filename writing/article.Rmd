@@ -142,7 +142,13 @@ grid.raster(img)
 ```{r fig.width=10, fig.height=4, echo=FALSE}
 library(png)
 library(grid)
-img <- readPNG("../writing/figure/density.png")
+img <- readPNG("../writing/figure/density.low.png")
+grid.raster(img)
+```
+```{r fig.width=10, fig.height=4, echo=FALSE}
+library(png)
+library(grid)
+img <- readPNG("../writing/figure/density.high.png")
 grid.raster(img)
 ```
 **Рисунок 3.** Плотность распределения оценок по выбранным странам

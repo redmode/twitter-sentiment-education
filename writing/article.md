@@ -199,3 +199,7 @@ fast assignment, fast grouping and list columns..  [http://CRAN.R-project.org/pa
 - Hadley Wickham,   (2011) The Split-Apply-Combine Strategy for Data Analysis.  *Journal of Statistical Software*  **40**  (1)   1-29  [http://www.jstatsoft.org/v40/i01/](http://www.jstatsoft.org/v40/i01/)
 - Hadley Wickham,   (2012) stringr: Make it easier to work with strings..  [http://CRAN.R-project.org/package=stringr](http://CRAN.R-project.org/package=stringr)
 
+
+
+-------
+This report was generated with [R](http://www.r-project.org/) (2.15.3) and [pander](https://github.com/rapporter/pander) (0.3.3) on x86_64-suse-linux-gnu platform.
