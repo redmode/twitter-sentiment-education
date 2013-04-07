@@ -21,6 +21,7 @@ require(ggplot2)
 require(rworldmap)
 require(data.table)
 source("sentiment.R")
+source("utils.R")
 
 ##
 ## Reading stream

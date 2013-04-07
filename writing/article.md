@@ -40,53 +40,23 @@ Article describes sentiment-analysis of *Twitter*
 Анализ тональности нашел применение в различных областях: социология, политология, психология, медицина, маркетинг и др. В каждом конкретном случае могут ставиться отличные исследовательские или коммерческие задачи, однако используемый инструментарий чаще всего совпадает.
 
 Подходы к классификации тональности можно разделить на следующие категории:
-1. Использование набора "если-то".
+1. Использование набора "если-то" правил.
 2. Словарный разбор предложений.
 3. Машинное обучение с учителем.
-4. Машинное обучение без учителя 
+4. Машинное обучение без учителя (<a href="http://habrahabr.ru/post/149605/"></a> ).
 
-```
+Первый тип систем состоит из большого набора правил, применяя которые система делает заключение о тональности текста. Для надежной работы системы необходимо составить большое количество правил, которые, зачастую, привязаны к определенной предметной области, при смене которой требуется актуализировать базу правил. Тем не менее, этот подход, при условии наличия хорошей базы правил, относят к одному из самых точных.
 
-Error in eval(expr, envir, enclos) : could not find function "sitep"
+Словарный разбор предложений требует наличия так называемых тональных словарей, содержащих слова с положительной и отрицательной тональностью, а часто и дополнительным весовым коэффициентом. При разборе предложения рассчитывается общее количество слов с различной тональностью и выводится итоговый показатель тональности, по которому можно оценить и общий эмоциональный фон текста. К примерам исследований в данном направлении можно отнести работу (<a href="http://jeffreybreen.wordpress.com/2011/07/04/twitter-text-mining-r-slides/">Breen, 2011</a> ). 
 
-```
+При машинном обучении с учителем требуется наличие заранее подготовленного корпуса текстовых документов с уже проведенной оценкой тональности, который используется для обучения классификационной модели. В рамках данного направления существует большое количество методов классификации, т.к. метод опорных векторов, деревья решений и пр., которые хорошо зарекомендовали себя на практике. К очевидным недостаткам обучения с учителем относится недоступность или отсутствие обучающей выборки во многих практических случаях (<a href="http://dx.doi.org/10.1561/1500000011">Pang & Lee, 2008</a> ).
 
-.
+Машинное обучение без учителя --- перспективный, но одновременно и наименее точный способ классификации текста. Вместе с тем его применение возможно в широком спектре приложений (<a href="">Isabelle & Turney, unknown</a> ).
 
+В данном исследовании мы применяли словарный разбор предложений и их оценку по тональным словарям (<a href="http://www.cs.uic.edu/~liub/FBS/opinion-lexicon-English.rar"></a> ). Это было обусловлено, во-первых, сравнительной простотой используемых запросов, а во-вторых --- интернациональностью используемых в поиске терминов.
 
-
-Первый тип систем состоит из набора правил, применяя которые система делает заключение о тональности текста. Например, для предложения «Я люблю кофе», можно применить следующее правило:
-
-если сказуемое ("люблю") входит в положительный набор глаголов ("люблю", "обожаю", "одобряю" ...) и в предложении не имеется отрицаний, то классифицировать тональность как "положительная"
-
-
-
-Многие коммерческие системы используют данный подход, несмотря на то что он требует больших затрат, т.к. для хорошей работы системы необходимо составить большое количество правил. Зачастую правила привязаны к определенному домену (например, «ресторанная тематика») и при смене домена («обзор фотоаппаратов») требуется заново составлять правила. Тем не менее, этот подход является наиболее точным при наличии хорошей базы правил, но совершенно неинтересным для исследования.
-
-Подходы, основанные на словарях, используют так называемые тональные словари (affective lexicons) для анализа текста. В простом виде тональный словарь представляет из себя список слов со значением тональности для каждого слова. Вот пример из базы ANEW, переведенный на русский:
-слово   валентность (1-9)
-счастливый 	8.21
-хороший 	7.47
-скучный 	2.95
-сердитый 	2.85
-грустный 	1.61
-
-
-Чтобы проанализировать текст, можно воспользоваться следующим алгоритмом: сначала каждому слову в тексте присвоить его значением тональности из словаря (если оно присутствует в словаре), а затем вычислить общую тональность всего текста. Вычислять общую тональность можно разными способами. Самый простой из них — среднее арифметическое всех значений. Более сложный — обучить классификатор (напр. нейронная сеть).
-
-
-
-Машинное обучение с учителем является наиболее распространенным методом, используемым в исследованиях. Его суть состоит в том, чтобы обучить машинный классификатор на коллекции заранее размеченных текстах, а затем использовать полученную модель для анализа новых документов. Именно про этот метод я расскажу далее.
-
-
-
-Машинное обучение без учителя представляет собой, наверное, наиболее интересный и в то же время наименее точный метод анализа тональности. Одним из примеров данного метода может быть автоматическая кластеризация документов.
-
-
-
-unsupervised learning for classification up/down recommendations (<a href="">Isabelle & Turney, unknown</a> ) 
-
-A latent variable model for geographic lexical variation (<a href="http://dl.acm.org/citation.cfm?id=1870782"></a> )
+К проблемам сентимент-анализа относят идентификацию иронии, использование локального или субкультурного сленга, сокращений, наличие грамматических ошибок и пр. Все это усложняет и без того не простые задачи по классификации текста. 
+Также при проведении анализа тональности отдельно выделяют такое направление, как выявление географических отличий в лексиконе (<a href="http://dl.acm.org/citation.cfm?id=1870782"></a> ). Действительно, одно и то же слово даже в рамках одной страны и одного языка может интерпретироваться двояко, что также усложняет анализ.
 
 
 2. Данные
@@ -116,37 +86,15 @@ A latent variable model for geographic lexical variation (<a href="http://dl.acm
 5. Очистка текст сообщения от пунктуации, хэш-тэгов, удаление веб-ссылок, лишних пробелов, перевод в нижний регистр.
 6. Если после всех манипуляций все необходимые поля заполнены корректно, сообщение регистрируется в базе данных.
 
-Таким образом, в течение одной недели марта 2013 года было обработано и зарегистрировано 42803 сообщений микроблогов *Twitter* на английском языке, касающихся высшего образования.
+Таким образом, в течение одной недели марта 2013 года было обработано и зарегистрировано 42803 сообщений микроблогов *Twitter* на английском языке, касающихся высшего образования. После регистрации была проведена оценка тональности всех сообщений по пятибалльной шкале от -2 до +2.
 
 
 3. Результаты
 ------------------
 
+Большую часть всех сообщений составляли нейтральные по отношению к высшему образованию сообщения, а среди эмоционально окрашенных отзывов преобладали положительные (Таблица 1.). При этом более 60% всех сообщений было сгенерировано пользователями США и Великобритании. Среди прочих стран с англоговорящим населением (Канада, Австралия) выделяются государства Юго-Восточной Азии: Филиппины, Индия, Малайзия, Индонезия, что может свидетельствовать о высокой плотности населения и, одновременно, наличия потенциальных рынков сбыта образовательных услуг в этом регионе.
 
-
-**Таблица 1.** Примеры положительных и отрицательных сообщений
-
-|                                                        Positive                                                        |                                                            Negative                                                             |
-|:----------------------------------------------------------------------------------------------------------------------:|:-------------------------------------------------------------------------------------------------------------------------------:|
-|                                     She got good head, good brain, good education                                      |                     All I hear from my professor this morning is blah-blah-blah. Crazy psychology professor                     |
-|            Education is a better safeguard of liberty than a standing armyedward everett hale quotesfolder             |                Life hack: if you're considering taking abnormal psychology in college - consider suicide instead                |
-|             Interesting story. University hospital has among best cardiac arrest survival rates in region              |                     My management class was boring. Oh, hell! No! The professor even has really bad reviews                     |
-| One of my best friends who I met through college just got an article published I'm so proud of this girl! It's unreal! |                      I hope Clemson University parking service employees have a nice time burning in hell                       |
-|                             Wow! Just made a professor who never smiles smile! Haha I try                              | College makes me turn against what I loved. Year of cooking - started hating cooking. Now music college is making me hate music |
-
-
-
-![plot of chunk unnamed-chunk-3](figure/unnamed-chunk-3.png) 
-
-**Рисунок 1.** Облако тегов для положительных сообщений
-
-
-![plot of chunk unnamed-chunk-4](figure/unnamed-chunk-4.png) 
-
-**Рисунок 2.** Облако тегов для отрицательных сообщений
-
-
-**Таблица 2.** Распределение сообщений по странам
+**Таблица 1.** Распределение сообщений по странам
 
 |        &nbsp;        |  positive  |  negative  |  neutral  |  total  |  percentage  |
 |:--------------------:|:----------:|:----------:|:---------:|:-------:|:------------:|
@@ -164,28 +112,69 @@ A latent variable model for geographic lexical variation (<a href="http://dl.acm
 |   **World, total**   |   11756    |    7920    |   23127   |  42803  |    100,00    |
 
 
+Типичные сообщения с положительной и отрицательной тональностью приведены в Таблице 2. Среди них можно выделить как относящиеся к образованию вообще, так и записи, которые носят частный характер. 
+
+**Таблица 2.** Примеры положительных и отрицательных сообщений
+
+|                                                        Positive                                                        |                                                            Negative                                                             |
+|:----------------------------------------------------------------------------------------------------------------------:|:-------------------------------------------------------------------------------------------------------------------------------:|
+|                                     She got good head, good brain, good education                                      |                     All I hear from my professor this morning is blah-blah-blah. Crazy psychology professor                     |
+|            Education is a better safeguard of liberty than a standing armyedward everett hale quotesfolder             |                Life hack: if you're considering taking abnormal psychology in college - consider suicide instead                |
+|             Interesting story. University hospital has among best cardiac arrest survival rates in region              |                     My management class was boring. Oh, hell! No! The professor even has really bad reviews                     |
+| One of my best friends who I met through college just got an article published I'm so proud of this girl! It's unreal! |                      I hope Clemson University parking service employees have a nice time burning in hell                       |
+|                             Wow! Just made a professor who never smiles smile! Haha I try                              | College makes me turn against what I loved. Year of cooking - started hating cooking. Now music college is making me hate music |
+
+
+Для наглядного представления частотного распределения слов, а также их взаимосвязи используют структуру "облако тегов" (*tags cloud*) (Рисунки 1 и 2). Наиболее часто встречающиеся слова размещают в середине и делают их более крупными, слова, связанные с ними, и появляющиеся в тексте немного реже, размещают по окружности от высокочастотных --- и так далее до внешней границы облака. На рисунках визуализированы два набора терминов: отдельно для положительных и отрицательных высказываний, которые встречались в тексте как минимум 50 раз.
+
+![plot of chunk unnamed-chunk-4](figure/unnamed-chunk-4.png) 
+
+**Рисунок 1.** Облако тегов для положительных сообщений
+
+![plot of chunk unnamed-chunk-5](figure/unnamed-chunk-5.png) 
+
+**Рисунок 2.** Облако тегов для отрицательных сообщений
+
+Можно отметить, что слова, находящиеся в центре облака, являются, в основном, общеупотребляемыми, а абсолютное большинство слов текста не входят в словари тональности. Это может свидетельствовать о том, что выборка не была узко направленной и специфичной.
+
+Распределение плотности оценок по странам со сравнительно высоким количеством сообщений слабо отличалось от общемирового распределения, что вполне предсказуемо в связи с доминирующим положением США (рисунок 3.). Большинство стран с достаточным количеством наблюдений, например, Россия (509 сообщений) имеют распределение плотности оценок мало отличающееся от мирового, а для стран с небольшим количеством наблюдений, т.к. Украина (12 сообщений) и Беларусь (6 сообщений) могут преобладать наблюдения с определенным типом тональности.
+
 ![plot of chunk unnamed-chunk-6](figure/unnamed-chunk-6.png) 
 
-**Рисунок 3.** Карта распределения сообщений
+**Рисунок 3.** Плотность распределения оценок по выбранным странам
+
+На рисунке 4. отображены только сообщения с положительной или отрицательной тональностью. Можно отметить, что в целом большее количество сообщений в Twitter исходило от пользователей из экономически активных регионов: США, Западной Европы, стран Карибского бассейна, восточного побережья Австралии, Юго-Восточной Азии, Индии, Юго-Восточного побережья Бразилии, Южной Африки, Западного побережья экваториальной Африки и некоторых других.
 
 ![plot of chunk unnamed-chunk-7](figure/unnamed-chunk-7.png) 
 
-**Рисунок 4.** Плотность распределения оценок по выбранным странам
+**Рисунок 4.** Карта распределения сообщений
+
+Какие из этих регионов могут стать потенциальными рынками сбыта для белорусских образовательных услуг? Ответ на этот вопрос следует искать применительно к форме предоставления таких услуг. Если речь идет о дистанционном образовании, то, при должной организации, в любой из стран данных регионов можно конкурировать с локальными поставщиками услуг. Это может быть как ценовая конкуренция, так и нишевая конкуренция. Однако при предоставлении услуг традиционным способом существенными становятся вопросы географической близости и насыщенности местного рынка образования. В таком случае, основное внимание целесообразно уделить Юго-Восточной Азии, где наблюдается высокая плотность населения и сравнительно небольшое количество университетов на 1000 населения.
+
+На рисунках 4 и 5 заметно, что отрицательные сообщения сконцентрированы в нескольких "очагах", а в остальном они распределены равномерно и уступают положительным заметкам. Можно предположить, что такие явления связаны с локальными и/или временными событиями --- однако сделать достоверные выводы станет возможным только после проведения более масштабного исследования.
+
+![plot of chunk unnamed-chunk-8](figure/unnamed-chunk-8.png) 
+
+**Рисунок 5.** Карта распределения сообщений для США
 
 
 Заключение
 ------------------
-Направления дальнейших исследований:
-* Анализ сообщений в микроблогах на других языках.
-* Сопоставление эмоциональных оценок сообщений с рейтингами университетов по странам.
 
-Весь анализ был проведен на платформе *R* (<a href="http://www.R-project.org/"></a> ), использовались пакеты *RCurl* (<a href="http://CRAN.R-project.org/package=RCurl">Lang, 2013</a> ), *RJSONIO* (<a href="http://CRAN.R-project.org/package=RJSONIO">Lang, 2013b</a> ) для агрегации данных от веб-служб *Twitter* и *GeoNames*, *ggplot2* (<a href="http://had.co.nz/ggplot2/book">Wickham, 2009</a> ), *wordcloud* (<a href="http://CRAN.R-project.org/package=wordcloud">Fellows, 2012</a> ), *rworldmap* (<a href="http://CRAN.R-project.org/package=rworldmap">South _et. al._ 2012</a> ) --- для визуализации результатов, *plyr* (<a href="http://www.jstatsoft.org/v40/i01/">Wickham, 2011</a> ), *stringr* (<a href="http://CRAN.R-project.org/package=stringr">Wickham, 2012</a> ), *data.table* (<a href="http://CRAN.R-project.org/package=data.table">Dowle _et. al._ 2013</a> )--- для общей и статистической обработки данных, *tm* (<a href="http://CRAN.R-project.org/package=tm">Feinerer & Hornik, 2013</a> ; <a href="http://www.jstatsoft.org/v25/i05/">Feinerer _et. al._ 2008</a>  ) --- для семантического анализа текста. Исходный программный код, использованный при написании статьи доступен по адресу (<a href="https://github.com/redmode/twitter-sentiment-education"></a> ).
+Использование данных микроблогов Twitter становится мощным инструментом современного маркетинга, позволяющем за сравнительно короткий промежуток времени агрегировать большие объемы информации о потребителях. Одним из очевидных направлений использования таких сведений является сентимент-анализ или анализ тональности.
+
+Проведенное исследование показало, что в целом, отношение к высшему образованию положительное, большинство обнаруженных "очагов" отрицательных отзывов следует связывать с локальными или временными событиями. При этом распределение плотности оценок тональности сообщений мало отличается для стран с достаточным количеством наблюдений. При таргетировании белорусских образовательных услуг, предоставляемых на английском языке, следует обратить внимание на страны Юго-Восточной Азии.
+
+Среди направлений дальнейших исследований можно выделить анализ сообщений в микроблогах на языках, отличных от английского и сопоставление результатов с полученными в данной работе, сравнение эмоциональных оценок сообщений о высшем образовании с рейтингами университетов по странам, а также долгосрочные исследования, позволяющие нивелировать эффект локальных и временных событий.
+
+Анализ был проведен на базе платформы *R* (<a href="http://www.R-project.org/"></a> ), использовались пакеты *RCurl* (<a href="http://CRAN.R-project.org/package=RCurl">Lang, 2013</a> ), *RJSONIO* (<a href="http://CRAN.R-project.org/package=RJSONIO">Lang, 2013b</a> ) для агрегации данных от веб-служб *Twitter* и *GeoNames*, *ggplot2* (<a href="http://had.co.nz/ggplot2/book">Wickham, 2009</a> ), *wordcloud* (<a href="http://CRAN.R-project.org/package=wordcloud">Fellows, 2012</a> ), *rworldmap* (<a href="http://CRAN.R-project.org/package=rworldmap">South _et. al._ 2012</a> ) --- для визуализации результатов, *plyr* (<a href="http://www.jstatsoft.org/v40/i01/">Wickham, 2011</a> ), *stringr* (<a href="http://CRAN.R-project.org/package=stringr">Wickham, 2012</a> ), *data.table* (<a href="http://CRAN.R-project.org/package=data.table">Dowle _et. al._ 2013</a> )--- для общей и статистической обработки данных, *tm* (<a href="http://CRAN.R-project.org/package=tm">Feinerer & Hornik, 2013</a> ; <a href="http://www.jstatsoft.org/v25/i05/">Feinerer _et. al._ 2008</a>  ) --- для семантического анализа текста, *pander* (<a href="http://cran.r-project.org/package=pander">Daróczi, 2013</a> ) --- для подготовки текста статьи. Исходный программный код, использованный при написании статьи доступен по адресу (<a href="https://github.com/redmode/twitter-sentiment-education"></a> ).
 
 
 Литература
 --------------
 
 - R Core Team ,   (2013) R: A Language and Environment for Statistical Computing.  [http://www.R-project.org/](http://www.R-project.org/)
+- Gergely Daróczi,   (2013) pander: An R Pandoc Writer.  [http://cran.r-project.org/package=pander](http://cran.r-project.org/package=pander)
 - M Dowle, T Short, S Lianoglou,   (2013) data.table: Extension of data.frame for fast indexing, fast ordered joins,
 fast assignment, fast grouping and list columns..  [http://CRAN.R-project.org/package=data.table](http://CRAN.R-project.org/package=data.table)
 - Ingo Feinerer, Kurt Hornik, David Meyer,   (2008) Text Mining Infrastructure in R.  *Journal of Statistical Software*  **25**  (5)   1-54  [http://www.jstatsoft.org/v25/i05/](http://www.jstatsoft.org/v25/i05/)
@@ -196,10 +185,14 @@ fast assignment, fast grouping and list columns..  [http://CRAN.R-project.org/pa
 -  GeoNames.  [http://geonames.org/](http://geonames.org/)
 -  the Twitter Streaming APIs.  *@twitterapi*  [https://dev.twitter.com/docs/streaming-apis](https://dev.twitter.com/docs/streaming-apis)
 - Jacob Eisenstein, Brendan O'Connor, Noah Smith, Eric Xing,  A latent variable model for geographic lexical variation.  *Proceedings of the 2010 Conference on Empirical Methods in Natural Language Processing*  [http://dl.acm.org/citation.cfm?id=1870782](http://dl.acm.org/citation.cfm?id=1870782)
+-  ÐÐ±ÑÑÐ°ÐµÐ¼ ÐºÐ¾Ð¼Ð¿ÑÑÑÐµÑ ÑÑÐ²ÑÑÐ²Ð°Ð¼ (sentiment analysis Ð¿Ð¾-ÑÑÑÑÐºÐ¸).  *Ð¥Ð°Ð±ÑÐ°ÑÐ°Ð±Ñ / ÐÐ¾Ð¼Ð¼ÐµÐ½ÑÐ°ÑÐ¸Ð¸ Ðº Ð¿Ð¾ÑÑÑ Â«ÐÐ±ÑÑÐ°ÐµÐ¼ ÐºÐ¾Ð¼Ð¿ÑÑÑÐµÑ ÑÑÐ²ÑÑÐ²Ð°Ð¼ (sentiment analysis Ð¿Ð¾-ÑÑÑÑÐºÐ¸)Â»*  [http://habrahabr.ru/post/149605/](http://habrahabr.ru/post/149605/)
 -  redmode,  twitter-sentiment-education.  *GitHub*  [https://github.com/redmode/twitter-sentiment-education](https://github.com/redmode/twitter-sentiment-education)
+- Jeffrey Breen,   (2011) slides from my R tutorial on Twitter text mining #rstats.  *Things I tend to forget*  [http://jeffreybreen.wordpress.com/2011/07/04/twitter-text-mining-r-slides/](http://jeffreybreen.wordpress.com/2011/07/04/twitter-text-mining-r-slides/)
+-  .  [http://www.cs.uic.edu/~liub/FBS/opinion-lexicon-English.rar](http://www.cs.uic.edu/~liub/FBS/opinion-lexicon-English.rar)
 - Duncan Lang,   (2013) RCurl: General network (HTTP/FTP/...) client interface for R.  [http://CRAN.R-project.org/package=RCurl](http://CRAN.R-project.org/package=RCurl)
 - Duncan Lang,   (2013) RJSONIO: Serialize R objects to JSON, JavaScript Object Notation.  [http://CRAN.R-project.org/package=RJSONIO](http://CRAN.R-project.org/package=RJSONIO)
 - Bing Liu,   (2012) Sentiment Analysis And Opinion Mining.  *Synthesis Lectures on Human Language Technologies*  **5**  1-167  [10.2200/S00416ED1V01Y201204HLT016](http://dx.doi.org/10.2200/S00416ED1V01Y201204HLT016)
+- Bo Pang, Lillian Lee,   (2008) Opinion Mining And Sentiment Analysis.  *Foundations And Trends® in Information Retrieval*  **2**  1-135  [10.1561/1500000011](http://dx.doi.org/10.1561/1500000011)
 - Andy South, with Scutt-Phillips, Barry Rowlingson, Roger Foster,   (2012) rworldmap: Mapping global data, vector and raster..  [http://CRAN.R-project.org/package=rworldmap](http://CRAN.R-project.org/package=rworldmap)
 - Pierre Isabelle, Peter D. Turney,   (unknown) Thumbs up or Thumbs Down?.  *Unknown*
 - Hadley Wickham,   (2009) ggplot2: elegant graphics for data analysis.  [http://had.co.nz/ggplot2/book](http://had.co.nz/ggplot2/book)
