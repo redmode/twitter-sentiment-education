@@ -23,6 +23,13 @@ require(data.table)
 source("sentiment.R")
 source("utils.R")
 
+
+###########################
+##
+## One-time run part (re-run only if you have new twwets)
+##
+###########################
+
 ##
 ## Reading stream
 ##

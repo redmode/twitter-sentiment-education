@@ -2,6 +2,6 @@ Article for international journal "Innovative Educational Technologies" (http://
 
 Contains:
 - R code for scrapping, analysing and presenting Twitter data
-- Data itself
+- Scrapped data itself
 - RMarkdown writing template
 - Final paper in MS Word format
